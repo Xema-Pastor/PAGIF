@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación de Cálculo de gálibos en Ferrocarriles</title>
+    <link rel="stylesheet" href="estilos.css">
+
+</head>
+<body>
+    <header>
+        <div class="contenedor-titulo">
+            <h1 class="titulo">Aplicación de Cálculo de gálibos en Ferrocarriles</h1>
+        </div>
+        <img class="logo-typsa" src="./imagenes/ICON0.PNG" alt="Logo Typsa" width="150 px">             
+    </header>
+    <hr>
+    <main>
+        <section class="contenedor-controles">
+            <div>
+                <h4>Selección de gálibo de partes altas</h4>
+                <select	id="GaliboPartesAltas" onchange="seleccionGaliboPartesAltas()">
+                    <option	value="">Selecciona el tipo de gálibo de las partes altas</option>
+                    <option	value="GHE16">GHE16</option>
+                    <option	value="GEA16">GEA16</option>
+                    <option	value="GEB16">GEB16</option>
+                    <option	value="GEC16">GEC16</option>
+                    <option	value="GA">GA</option>
+                    <option	value="GB">GB</option>
+                    <option	value="GC">GC</option>
+                    <option	value="GEE10">GEE10</option>
+                    <option	value="GED10">GED10</option>
+                </select>
+            </div>
+            <div>
+                <h4>Selección de gálibo de partes bajas</h4>
+                <select	id="GaliboPartesBajas" onchange="seleccionGaliboPartesBajas()">
+                    <option	value="">Selecciona el tipo de gálibo de las partes bajas</option>
+                    <option	value="Por programar">Por programar</option>
+                </select>
+            </div>
+            <div>
+                <h4>Selección de pantógrafo</h4>
+                <select	id="Pantografo" onchange="seleccionPantografo()">
+                    <option	value="">Selecciona el tipo de pantógrafo</option>
+                    <option	value="Ancho 1950 mm">Ancho 1950 mm (ancho ibérico e internacional)</option>
+                    <option	value="Ancho 1600 mm">Ancho 1600 mm (ancho ibérico e internacional)</option>
+                    <option	value="Ancho 1700 mm">Ancho 1700 mm (ancho métrico)</option>
+                </select>
+            </div>
+            <div>
+                <h4>Selección de catenaria</h4>
+                <select	id="Catenaria" onchange="seleccionCatenaria()">
+                    <option	value="">Selecciona el tipo de catenaria</option>
+                    <option	value="CA-160">CA-160</option>
+                    <option value="CAU-220">CAU-220</option>
+                    <option value="CA-220">CA-220</option>
+                    <option value="SICAT H 1.0">SICAT H 1.0</option>
+                    <option value="EAC-350">EAC-350</option>
+                    <option value="Rigida">Rigida</option>
+                </select>
+            </div>
+            <div>
+                <h4>Selección del tipo de obra</h4>
+                <select	id="Obra" onchange="seleccionObra()">
+                    <option	value="">Selecciona el tipo de obra</option>
+                    <option	value="Líneas existentes, para pantógrafos con trocadores aislados">Líneas existentes, para pantógrafos con trocadores aislados</option>
+                    <option	value="Líneas nuevas o acondicionadas, para permitir pantógrafos con trocadores no aislados.">Líneas nuevas o acondicionadas, para permitir pantógrafos con trocadores no aislados.</option>
+                </select>
+            </div>
+            <div>
+                <h4>Selección de la línea</h4>
+                <select	id="Linea" onchange="seleccionLinea()">
+                    <option	value="">Selecciona el tipo de línea</option>
+                    <option	value="1,5 k.V. c.c.">1,5 k.V. c.c.</option>
+                    <option	value="3,0 k.V. c.c.">3,0 k.V. c.c.</option>
+                    <option	value="25 k.V. c.a.">25 k.V. c.a.</option>
+                </select>
+            </div>
+            <div>
+                <h4>Corrección de fórmula de suma de ángulos de disimetrías del vehículo</h4>
+                <input type="checkbox" id="correccion" onchange="calcula()">
+            </div>
+            <div>
+                <h3>3.2.- REGLAS ASOCIADAS</h3>
+                <h4>3.2.2.- DESPLAZAMIENTOS LATERALES</h4>
+                <h5>3.2.2.1.- Salientes</h5>
+                <input type="radio" name="GiroCurva" value="Derecha" checked>A derechas
+                <input type="radio" name="GiroCurva" value="Izquierda">A zquierdas
+                <div class="rejilla-3">
+                    <p>Radio de curvatura</p>
+                    <input type="text" id="R=" value="250">
+                    <p>[m]</p>
+                    <p>Ancho de vía nominal</p>
+                    <input type="text" id="LN=" disabled>
+                    <p>[m]</p>
+                    <p>Sobreancho máximo</p>
+                    <input type="text" id="DeltaLN=" value="0.03" disabled>
+                    <p>[m]</p>
+                    <p>Ancho de vía</p>
+                    <input type="text" id="L=" disabled>
+                    <p>[m]</p>
+                </div>
+                <input type="text" id="AvisoRh=" disabled value="Ningún aviso">
+
+                <h5>3.2.2.2.- Desplazamientos cuasiestáticos laterales</h5>
+                <div class="rejilla-3">
+                    <p>Peralte de la vía</p>
+                    <input type="text" id="D=" value="0.16">
+                    <p>[m]</p>
+                    <p>Peralte por convenio de la vía</p>
+                    <input type="text" id="D0=" value="0.15" disabled>
+                    <p>[m]</p>
+                    <p>Insuficiencia de peralte</p>
+                    <input type="text" id="I=" value="0.15">
+                    <p>[m]</p>
+                    <p>Insuficiencia de peralte por convenio</p>
+                    <input type="text" id="I0=" value="0.05" disabled>
+                    <p>[m]</p>
+                    <p>Distancia entre círculos de rodadura</p>
+                    <input type="text" id="L=" value="1.73" disabled>
+                    <p>[m]</p>
+                    <p>Altura del centro de balanceo del vehículo</p>
+                    <input type="text" id="hc0=" value="0.5" disabled>
+                    <p>[m]</p>
+                </div>
+
+                <h5>3.2.2.3.- Desplazamientos aleatorios laterales</h5>
+                <h5>a) Por desplazamientos de la vía</h5>
+                <p>Tipo de vía</p>
+                <select id="TipoVia" onchange="seleccionVia()">
+                    <option value="">Selecciona el tipo de vía</option>
+                    <option value="Balasto">Balasto</option>
+                    <option value="Placa">Placa</option>
+                </select>
+                <div class="rejilla-3">
+                    <p>Desplazamiento lateral de la vía</p>
+                    <input type="text" id="Tvia=" disabled>
+                    <p>[m]</p>
+                </div>
+                <h5>b) Por desplazamientos de la vía</h5>
+                <div class="rejilla-3">
+                    <p>Diferencia entre peralte real y teórico</p>
+                    <input type="text" id="TD=" disabled>
+                    <p>[m]</p>
+                    <p>Velocidad máxima de la vía</p>
+                    <input type="text" id="VMaxVia=" value="81">
+                    <p>[km/h]</p>
+                </div>
+                <h5>c) Por disimetrías en el vehículo</h5>
+                <div class="rejilla-3">
+                    <p>Tolerancias en el reglaje de la suspensión</p>
+                    <input type="text" id="alfaSusp=" value="0.23" disabled>
+                    <p>[º]</p>
+                    <p>Reparto desigual de cargas</p>
+                    <input type="text" id="alfaCarga=" value="0.77" disabled>
+                    <p>[º]</p>
+                    <p>Giro total</p>
+                    <input type="text" id="etaCero=" value="1.00" disabled>
+                    <p>[º]</p>
+                </div>
+                <h5>d) Por oscilaciones del vehículo debidas a irregularidades de la vía</h5>
+                <p>Estado de la vía</p>
+                <select id="EstadoVia" onchange="seleccionEstadoVia()">
+                    <option value="">Selecciona el estado  de la vía</option>
+                    <option value="BuenEstado">Buen Estado</option>
+                    <option value="MalEstado">Mal Estado</option>
+                </select>
+                <div class="rejilla-3">
+                    <p>Giro</p>
+                    <input type="text" id="alfaOscI040=" disabled>
+                    <p>[º]</p>
+                    <p></p>
+                    <input type="text" id="alfaOscI030=" disabled>
+                    <p>[º]</p>
+                    <p></p>
+                    <input type="text" id="alfaOscA040=" disabled>
+                    <p>[º]</p>
+                    <p></p>
+                    <input type="text" id="alfaOscA030=" disabled>
+                    <p>[º]</p>
+                </div>
+
+                <h5>3.2.2.4.- Márgenes horizontales complementarios laterales</h5>
+                <div class="rejilla-3">
+                    <p>Márgenes horizontales</p>
+                    <input type="text" id="M3b=" value="0.20" disabled>
+                    <p>[m]</p>
+                </div>
+
+                <h4>3.2.3.- DESPLAZAMIENTOS PERPENDICULARES AL PLANO DE RODADURA</h4>
+                <h5>3.2.3.1.- Inscripción en acuerdos verticales</h5>
+                <input type="checkbox" id="esRectaVertical"> Recta
+                <div class="rejilla-3">
+                    <p>Radio del acuerdo vertical</p>
+                    <input type="text" id="Rv=" value="2000">
+                    <p>[m]</p>
+                    <p>Desplazamiento por inscripción en acuerdos verticales</p>
+                    <input type="text" id="DeltaHRv=" disable>
+                    <p>[m]</p>
+                </div>
+                <input type="text" id="AvisoRv=" disabled value="Ningún aviso">
+                <h5>3.2.3.2.- Desplazamientos cuasiestáticos perpendiculares al plano de rodadura</h5>
+                <p>Ver valores del apartado 3.2.2.2</p>
+                <h5>3.2.3.3.- Desplazamientos aleatorios perpendiculares al plano de rodadura</h5>
+                <h5>a) Por desplazamientos de la vía</h5>
+                <div class="rejilla-3">
+                    <p>Desplazamiento vertical de la vía</p>
+                    <input type="text" id="TN=" disabled value="0.02">
+                    <p>[m]</p>
+                </div>
+                <h5>b) Por desviaciones en el peralte</h5>
+                <div class="rejilla-3">
+                    <p>Diferencia entre peralte real y teórico</p>
+                    <input type="text" id="TD=2" disabled>
+                    <p>[m]</p>
+                </div>
+                <h5>c) Por disimetrías en el vehículo</h5>
+                <div class="rejilla-3">
+                        <p>Tolerancias en el reglaje de la suspensión</p>
+                        <input type="text" id="alfaSusp=2" value="0.23" disabled>
+                        <p>[º]</p>
+                        <p>Reparto desigual de cargas</p>
+                        <input type="text" id="alfaCarga=2" value="0.77" disabled>
+                        <p>[º]</p>
+                        <p>Giro total</p>
+                        <input type="text" id="etaCero=2" value="1.00" disabled>
+                        <p>[º]</p>
+                </div>
+                <h5>d) Por oscilaciones del vehículo debidas a irregularidades de la vía</h5>
+                <div class="rejilla-3">
+                    <p>Giro</p>
+                    <input type="text" id="alfaOscI040pant=" disabled>
+                    <p>[º]</p>
+                    <p></p>
+                    <input type="text" id="alfaOscI030pant=" disabled>
+                    <p>[º]</p>
+                    <p></p>
+                    <input type="text" id="alfaOscA040pant=" disabled>
+                    <p>[º]</p>
+                    <p></p>
+                    <input type="text" id="alfaOscA030pant=" disabled>
+                    <p>[º]</p>
+                </div>
+                <h5>3.2.3.4.- Márgenes complementarios perpendiculares al plano de rodadura</h5>
+                <div class="rejilla-3">
+                    <p>Márgenes verticales</p>
+                    <input type="text" id="M3h=" value="0.15" disabled>
+                    <p>[m]</p>
+                </div>
+                <h3>FACTORES DE SEGURIDAD</h3>
+                <div class="rejilla-3">
+                    <p>General</p>
+                    <input type="text" id="K=" value="1.20" disabled>
+                    <p>[]</p>
+                    <p>Para desplazamientos aleatorios laterales y h!>0.50 m</p>
+                    <input type="text" id="Kale=" value="1.00" disabled>
+                    <p>[]</p>
+                </div>
+                <h3>GÁLIBO DEL PANTÓGRAFO</h3>
+                <div class="rejilla-3">
+                    <p>Anchura del pantógrafo</p>
+                    <input type="text" id="bp=" disabled>
+                    <p>[m]</p>
+                    <p>Semiancho de la mesilla del pantógrafo</p>
+                    <input type="text" id="bw=" disabled>
+                    <p>[m]</p>
+                    <p>Desplazamiento lateral máximo del pantógrafo</p>
+                    <input type="text" id="epo=" disabled>
+                    <p>[m]</p>
+                    <p></p>
+                    <input type="text" id="epu=" disabled>
+                    <p>[m]</p>
+                    <p>Peralte por convenio de la vía, para pantógrafo</p>
+                    <input type="text" id="D'0=" disabled>
+                    <p>[m]</p>
+                    <p>Insuficiencia de peralte por convenio, para pantógrafo</p>
+                    <input type="text" id="I'0=" disabled>
+                    <p>[m]</p>
+                    <p>Distancia entre círculos de rodadura</p>
+                    <input type="text" id="L=2" disabled>
+                    <p>[m]</p>
+                    <p>Altura  del  centro  de  balanceo  del  vehículo, por convenio</p>
+                    <input type="text" id="h'0=2" disabled>
+                    <p>[m]</p>
+                    <p>Coeficiente de flexibilidad del vehículo, para el pantógrafo</p>
+                    <input type="text" value="0.225" id="s'0=" disabled>
+                    <p>[m]</p>
+                    <p>Proyección del ancho del trocador</p>
+                    <input type="text" id="cw=" disabled>
+                    <p>[m]</p>
+                    <p>Aislamiento eléctrico estático</p>
+                    <input type="text" id="belecestati=" disabled>
+                    <p>[m]</p>
+                    <p>Aislamiento eléctrico dinámico</p>
+                    <input type="text" id="besecdinama=" disabled>
+                    <p>[m]</p>
+                    <p>Altura del hilo de contacto</p>
+                    <input type="text" id="hf=">
+                    <p>[m]</p>
+                    <p>Elevación del hilo de contacto debido a la fuerza del pantógrafo, vmax</p>
+                    <input type="text" id="fsvmax=" disabled>
+                    <p>[m]</p>
+                    <p>Elevación del hilo de contacto debido a la fuerza del pantógrafo, vmin</p>
+                    <input type="text" id="fsvmin=" disabled>
+                    <p>[m]</p>
+                    <p>Elevación del pantógrafo debido al desgaste de la pletina y a flexibilidad del pantógrado</p>
+                    <input type="text" id="fwsfwa=" disabled>
+                    <p>[m]</p>
+                    <p>Altura máxima del gálibo mecánico, vmax</p>
+                    <input type="text" id="heffvmax=" disabled>
+                    <p>[m]</p>
+                    <p>Altura del gálibo eléctrico, vmax</p>
+                    <input type="text" id="heffelecvmax=" disabled>
+                    <p>[m]</p>
+                    <p>Altura máxima del gálibo mecánico, vmin</p>
+                    <input type="text" id="heffvmin=" disabled>
+                    <p>[m]</p>
+                    <p>Altura del gálibo eléctrico, vmin</p>
+                    <input type="text" id="heffelecvmin=" disabled>
+                    <p>[m]</p>
+                    <p>Altura máxima del gálibo mecánico</p>
+                    <input type="text" id="heff=" disabled>
+                    <p>[m]</p>
+                    <p>Altura del gálibo eléctrico</p>
+                    <input type="text" id="heffelec=" disabled>
+                    <p>[m]</p>
+                    <input type="text" id="AvisoPantografo=" disabled value="Ningún aviso">
+                </div>
+            </div>
+
+
+        </section>
+        <aside class="grafico">
+            grafico
+        </aside>
+        <section>
+            <div class="contPrincipalResult">
+                <div><h5>Punto</h5>
+                    <div id="nombrepunto"></div></div>
+                <div><h5>X</h5>
+                    <div id="X"></div></div>
+                <div><h5>Y</h5>
+                    <div id="Y"></div></div>
+                <div><h5>bobsti_lim</h5>
+                    <div id="bobsti_lim="></div></div>
+                <div><h5>hobsti_lim</h5>
+                    <div id="hobsti_lim="></div></div>
+                <div><h5>bobsta_lim</h5>
+                    <div id="bobsta_lim="></div></div>
+                <div><h5>hobsta_lim</h5>
+                    <div id="hobsta_lim="></div></div>
+                <div><h5>bobsti_nom</h5>
+                    <div id="bobsti_nom="></div></div>
+                <div><h5>hobsti_nom</h5>
+                    <div id="hobsti_nom="></div></div>
+                <div><h5>bobsta_nom</h5>
+                    <div id="bobsta_nom="></div></div>
+                <div><h5>hobsta_nom</h5>
+                    <div id="hobsta_nom="></div></div>
+                <div><h5>aux</h5>
+                    <div id="aux="></div></div>
+            </div>
+        </section>
+    </main>
+    <hr>
+    
+    <svg id="svg" height="600" width="600">
+        <!-- <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3"  fill="red" > -->
+        <line x1="0" y1="0" x2="600" y2="200" style="stroke:rgb(255,0,0);stroke-width:2" />
+    </svg>
+
+    <footer>
+        Creada por El Xema
+    </footer>
+    <script type="text/javascript" src="./datos.js"></script>
+    <script type="text/javascript" src="./script.js"></script>
+</body>
+</html>

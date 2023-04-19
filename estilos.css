@@ -1,0 +1,59 @@
+* {
+    font-family: Tahoma, Verdana, Geneva, sans-serif;
+    margin: 0.1rem;
+}
+
+header{
+    display: grid;
+    grid-template-columns: auto 150px;
+    grid-template-areas: 
+    "Titulo Imagen";
+}
+svg{
+    border:	2px	black	solid
+}
+main{
+    display: grid;
+    grid-template-columns: auto 500px;
+    grid-template-areas: 
+    "controles grafico";
+}
+
+.contenedor-titulo{
+    grid-area: Titulo;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-typsa{
+    grid-area: Imagen;
+    
+}
+
+.contenedor-controles{
+    grid-area: controles;
+    border:	2px	black	solid
+}
+
+.contPrincipalResult{
+    display: flex;
+    flex-direction: row;
+}
+
+
+.contSecundarioResult{
+
+}
+.rejilla-3{
+    display: grid;
+    grid-template-columns: auto 100px 50px;
+}
+
+.grafico{
+    grid-area: grafico;
+}
+
+canvas{
+    background-color: blue;
+}
