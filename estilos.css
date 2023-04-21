@@ -1,6 +1,8 @@
 * {
     font-family: Tahoma, Verdana, Geneva, sans-serif;
     margin: 0.1rem;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 header{
