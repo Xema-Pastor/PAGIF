@@ -41,10 +41,6 @@ main{
     flex-direction: row;
 }
 
-
-.contSecundarioResult{
-
-}
 .rejilla-3{
     display: grid;
     grid-template-columns: auto 100px 50px;
@@ -52,8 +48,4 @@ main{
 
 .grafico{
     grid-area: grafico;
-}
-
-canvas{
-    background-color: blue;
 }

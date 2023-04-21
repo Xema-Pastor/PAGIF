@@ -307,25 +307,91 @@ function muestraResultados(galibo){
  
 };
 
+function dibujaLinea(valorX1,valorY1,valorX2,valorY2,stroke,strokeWidth,strokeDasharray,esDibujado) {
+    const linea=document.createElementNS("http://www.w3.org/2000/svg","line")
+    linea.setAttribute("x1",100*valorX1+250)
+    linea.setAttribute("y1",600-100*valorY1)
+    linea.setAttribute("x2",100*valorX2+250)
+    linea.setAttribute("y2",600-100*valorY2)
+    linea.style.stroke=stroke
+    linea.style.strokeWidth=strokeWidth
+    linea.style.strokeDasharray=strokeDasharray
+    const texto=dibujaTexto(valorX1,valorY1,esDibujado)
+    return [linea,texto]
+}
+
+function dibujaTexto(valorX,valorY,esDibujado) {
+    const texto=document.createElementNS("http://www.w3.org/2000/svg","text")
+    if (esDibujado) {
+        texto.setAttribute("x", 100*valorX+250); 
+        texto.setAttribute("y", 600-100*valorY); 
+        texto.style.fontFamily = "Tahoma"; 
+        texto.style.fontSize = "10";
+        texto.textContent = valorX+", "+valorY;
+    }
+    return texto
+}
+
+function redibuja() {
+    const nombreGalibo=document.getElementById("GaliboPartesAltas").value
+    for (const galibo of galibos){
+        if (galibo.nombre==nombreGalibo){
+            dibuja(galibo)
+            break;
+        }
+    }
+}
 function dibuja(galibo) {
     var svg = document.getElementById("svg")
+    const dibujaTextoContorno=document.getElementById("dibujaTextoContorno").checked
+    const dibujaContornoLimi=document.getElementById("dibujaContornoLimi").checked
+    const dibujaContornoLima=document.getElementById("dibujaContornoLima").checked
+    const dibujaContornoNomi=document.getElementById("dibujaContornoNomi").checked
+    const dibujaContornoNoma=document.getElementById("dibujaContornoNoma").checked
     svg.replaceChildren("")
-    //var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    //svg.setAttribute("width",600)
-    //svg.setAttribute("height",600)
-    //console.log(galibo.contorno.length)
-    for (let i = 0; i < galibo.contorno.length-1; i++) {
-        const linea=document.createElementNS("http://www.w3.org/2000/svg","line")
-        linea.setAttribute("x1",100*galibo.contorno[i].x+300)
-        linea.setAttribute("y1",600-100*galibo.contorno[i].y)
-        linea.setAttribute("x2",100*galibo.contorno[i+1].x+300)
-        linea.setAttribute("y2",600-100*galibo.contorno[i+1].y)
-        linea.style.stroke="rgb(0,0,255)"
-        linea.style.strokeWidth=2
-        svg.appendChild(linea); 
+    for (let i = 1; i < 10; i++) {
+        const lineavertical = document.createElementNS("http://www.w3.org/2000/svg","line");
+        lineavertical.setAttribute("x1",50*i)
+        lineavertical.setAttribute("x2",50*i)
+        lineavertical.setAttribute("y1",0)
+        lineavertical.setAttribute("y2",700)
+        lineavertical.style.stroke="rgb(50,50,50)"
+        lineavertical.style.strokeDasharray=2
+        svg.appendChild(lineavertical);
     }
-
-    document.body.appendChild(svg);
+    for (let i = 1; i < 14; i++) {
+        const lineahorizontal = document.createElementNS("http://www.w3.org/2000/svg","line");
+        lineahorizontal.setAttribute("x1",0)
+        lineahorizontal.setAttribute("x2",500)
+        lineahorizontal.setAttribute("y1",50*i)
+        lineahorizontal.setAttribute("y2",50*i)
+        lineahorizontal.style.stroke="rgb(50,50,50)"
+        lineahorizontal.style.strokeDasharray=2
+        svg.appendChild(lineahorizontal);
+    }
+    for (let i = 0; i < galibo.contorno.length-1; i++) {
+        const result=dibujaLinea(galibo.contorno[i].x,galibo.contorno[i].y,galibo.contorno[i+1].x,galibo.contorno[i+1].y,"rgb(0,0,255)",2,"",dibujaTextoContorno)
+        svg.appendChild(result[0]);
+        svg.appendChild(result[1]);
+        const result_limi=dibujaLinea(galibo.contorno[i].bobsti_lim,galibo.contorno[i].hobsti_lim,galibo.contorno[i+1].bobsti_lim,galibo.contorno[i+1].hobsti_lim,"rgb(0,125,255)",1,10,dibujaContornoLimi)
+        svg.appendChild(result_limi[0]);
+        svg.appendChild(result_limi[1]);
+        const result_lima=dibujaLinea(galibo.contorno[i].bobsta_lim,galibo.contorno[i].hobsta_lim,galibo.contorno[i+1].bobsta_lim,galibo.contorno[i+1].hobsta_lim,"rgb(0,255,255)",1,10,dibujaContornoLima)
+        svg.appendChild(result_lima[0]);
+        svg.appendChild(result_lima[1]);
+        const result_nomi=dibujaLinea(galibo.contorno[i].bobsti_nom,galibo.contorno[i].hobsti_nom,galibo.contorno[i+1].bobsti_nom,galibo.contorno[i+1].hobsti_nom,"rgb(255,0,255)",1,10,dibujaContornoNomi)
+        svg.appendChild(result_nomi[0]);
+        svg.appendChild(result_nomi[1]);
+        const result_noma=dibujaLinea(galibo.contorno[i].bobsta_nom,galibo.contorno[i].hobsta_nom,galibo.contorno[i+1].bobsta_nom,galibo.contorno[i+1].hobsta_nom,"rgb(255,0,125)",1,10,dibujaContornoNoma)
+        svg.appendChild(result_noma[0]);
+        svg.appendChild(result_noma[1]);
+    }
+    const ultimopunto=galibo.contorno[galibo.contorno.length-1]
+    svg.appendChild(dibujaTexto(ultimopunto.x,ultimopunto.y,dibujaTextoContorno))
+    svg.appendChild(dibujaTexto(ultimopunto.bobsti_lim,ultimopunto.hobsti_lim,dibujaContornoLimi))
+    svg.appendChild(dibujaTexto(ultimopunto.bobsta_lim,ultimopunto.hobsta_lim,dibujaContornoLima))
+    svg.appendChild(dibujaTexto(ultimopunto.bobsti_nom,ultimopunto.hobsti_nom,dibujaContornoNomi))
+    svg.appendChild(dibujaTexto(ultimopunto.bobsta_nom,ultimopunto.hobsta_nom,dibujaContornoNoma))
 }
 
 function seleccionGaliboPartesAltas() {
