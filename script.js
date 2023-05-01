@@ -41,8 +41,18 @@ function calcula() {
 
     /*Determinación del gálibo*/
     const nombreGalibo=document.getElementById("GaliboPartesAltas").value;
+    const nombreGaliboPB=document.getElementById("GaliboPartesBajas").value;
+    let galiboDibujo=undefined
+    let galiboDibujoPB=undefined
+    for (const galiboPB of galibosPB) {
+        if (galiboPB.nombre==nombreGaliboPB){
+            galiboDibujoPB=galiboPB
+            break
+        }
+    }
     for (const galibo of galibos){
         if (galibo.nombre==nombreGalibo){
+            galiboDibujo=galibo
             const chquiebroaux=galibo.hquiebroaux;
             const chtopeaux=galibo.htopeaux;
             const cdifaux=galibo.difaux;
@@ -105,7 +115,7 @@ function calcula() {
                 }
                 if (galibo.nombre=="GEE10" || galibo.nombre=="GED10") {
                     punto.k=999
-                    punto.s0=999
+                    punto.s0=0.4
                     if (R>=100){
                         punto.Sa=1/R+DeltaL/2;
                         punto.Si=1/R+DeltaL/2;
@@ -234,10 +244,10 @@ function calcula() {
 
             };
             muestraResultados(galibo);
-            dibuja(galibo);
             break;
         };
-    }
+    };
+    dibuja(galiboDibujo,galiboDibujoPB);
 }
 
 function muestraResultados(galibo){
@@ -334,14 +344,24 @@ function dibujaTexto(valorX,valorY,esDibujado) {
 
 function redibuja() {
     const nombreGalibo=document.getElementById("GaliboPartesAltas").value
+    const nombreGaliboPB=document.getElementById("GaliboPartesBajas").value
+    let galiboDibujo=undefined
+    let galiboDibujoPB=undefined
     for (const galibo of galibos){
         if (galibo.nombre==nombreGalibo){
-            dibuja(galibo)
+            galiboDibujo=galibo
             break;
         }
     }
+    for (const galiboPB of galibosPB){
+        if (galiboPB.nombre==nombreGaliboPB){
+            galiboDibujoPB=galiboPB
+            break;
+        }
+    }
+    dibuja(galiboDibujo,galiboDibujoPB);
 }
-function dibuja(galibo) {
+function dibuja(galibo,galiboPB) {
     var svg = document.getElementById("svg")
     const dibujaTextoContorno=document.getElementById("dibujaTextoContorno").checked
     const dibujaContornoLimi=document.getElementById("dibujaContornoLimi").checked
@@ -392,25 +412,22 @@ function dibuja(galibo) {
     svg.appendChild(dibujaTexto(ultimopunto.bobsta_lim,ultimopunto.hobsta_lim,dibujaContornoLima))
     svg.appendChild(dibujaTexto(ultimopunto.bobsti_nom,ultimopunto.hobsti_nom,dibujaContornoNomi))
     svg.appendChild(dibujaTexto(ultimopunto.bobsta_nom,ultimopunto.hobsta_nom,dibujaContornoNoma))
+    for (let i = 0; i < galiboPB.contorno.length-1; i++) {
+        const result=dibujaLinea(galiboPB.contorno[i].x,galiboPB.contorno[i].y,galiboPB.contorno[i+1].x,galiboPB.contorno[i+1].y,"rgb(0,0,255)",2,"",dibujaTextoContorno)
+        svg.appendChild(result[0]);
+        svg.appendChild(result[1]);
+    }
 }
 
 function seleccionGaliboPartesAltas() {
     const nombreGalibo=document.getElementById("GaliboPartesAltas").value;;
     for (const galibo of galibos){
         if (galibo.nombre==nombreGalibo){
-            //const chquiebroaux=document.getElementById("hquiebroaux=");
-            //const chtopeaux=document.getElementById("htopeaux=");
-            //const cdifaux=document.getElementById("difaux=");
-            //const chotra=document.getElementById("hotra=");
             const cln=document.getElementById("LN=");
             const cd0=document.getElementById("D0=");
             const ci0=document.getElementById("I0=");
             const chco=document.getElementById("hc0=");
             const cl=document.getElementById("L=");
-            //chquiebroaux.value=galibo.hquiebroaux;
-            //chtopeaux.value=galibo.htopeaux;
-            //cdifaux.value=galibo.difaux;
-            //chotra.value=galibo.hotra;
             cln.value=galibo.I;
             cd0.value=galibo.D0;
             ci0.value=galibo.I0;
@@ -422,8 +439,8 @@ function seleccionGaliboPartesAltas() {
     calcula();
 };
 
-function seleccionGaliboParteBajas() {
-    calcula();
+function seleccionGaliboPartesBajas() {
+    redibuja();
 }
 
 function seleccionCatenaria() {
